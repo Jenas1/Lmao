@@ -1,0 +1,33 @@
+env:
+    CIRRUS_CLONE_DEPTH: 1
+    BUILD_HOSTNAME: "jenas1"
+task:
+  name: Build LineageOS ROM
+  skip: $CIRRUS_BRANCH == 'main'
+  only_if: $CIRRUS_REPO_OWNER == 'jenas1'
+  depends_on: Test
+  timeout_in: 4h
+  persistent_worker:
+    labels:
+      name: AX61-1
+    isolation:
+      container:
+        image: cirrusci/android-sdk:33
+        cpu: 16
+        memory: 64G
+        volumes:
+          - /home/cirrus/workspace:/home/cirrus/workspace
+          - /home/cirrus/android:/home/cirrus/android
+    script:
+      - cd ~/android/lineage
+      - repo sync -j24 --no-tags --no-clone-bundle --force-sync
+      - source build/envsetup.sh
+      - lunch lineage_$DEVICE-userdebug
+      - make bacon -j24
+    persist_to_workspace:
+      root: ~/android/lineage/out/target/product/$DEVICE/
+      paths:
+        - lineage-*.zip
+    store_artifacts:
+      path: ~/android/lineage/out/target/product/$DEVICE/lineage-*.zip
+      destination: my-custom-rom/lineage-*.zip
