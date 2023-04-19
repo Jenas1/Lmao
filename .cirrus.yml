@@ -1,3 +1,8 @@
+env:
+  CIRRUS_CLONE_DEPTH: "1"
+  BUILD_HOSTNAME: "cirrus-ci.org"
+  WORKDIR: "/tmp"
+  
 task:
   name: "Setting Up, Syncing, Building and Uploading"
   only_if: $CIRRUS_REPO_OWNER == 'jenas1'
