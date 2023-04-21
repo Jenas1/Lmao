@@ -31,4 +31,4 @@ task:
      - ccache -s
 
   Upload-build_script:
-     - ./script/ziping.sh
+     - ./script/ziping.sh #lo
